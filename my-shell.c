@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <signal.h>
+
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_GREEN "\x1b[32m"
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RESET "\x1b[0m"
 
 char *copy_string(char *str, int start, int end)
 {
@@ -37,15 +43,16 @@ char **parse_command(char *instruction)
   return command;
 }
 
-void exit_process(int signal)
+void handle_ctrl_c(int signal)
 {
-  exit(0);
+  exit(130);
 }
 
-int handle_built_in(char **command)
+int handle_built_in(char **command, int *color_ind)
 {
   if (strcmp(command[0], "") == 0)
   {
+    *color_ind = 1;
     return 1;
   }
 
@@ -63,29 +70,50 @@ int handle_built_in(char **command)
   return 0;
 }
 
+void prompt(int *color_ind)
+{
+  printf(ANSI_COLOR_CYAN "my-shell ");
+
+  if (*color_ind)
+  {
+    printf(ANSI_COLOR_RED "$ ");
+  }
+  else
+  {
+    printf(ANSI_COLOR_GREEN "$ ");
+  }
+
+  printf(ANSI_COLOR_RESET);
+}
+
 int main(void)
 {
   signal(SIGINT, SIG_IGN);
+
+  int *color_ind = malloc(sizeof(int));
+  *color_ind = 0;
 
   while (1)
   {
     char instruction[255];
 
-    printf("my-shell $ ");
+    prompt(color_ind);
+
     gets(instruction);
 
     char **command = parse_command(instruction);
 
-    if (handle_built_in(command))
+    if (handle_built_in(command, color_ind))
     {
       continue;
     }
 
     int pid = fork();
+    int status;
 
     if (pid == 0)
     {
-      signal(SIGINT, exit_process);
+      signal(SIGINT, handle_ctrl_c);
 
       execvp(command[0], command);
 
@@ -94,7 +122,8 @@ int main(void)
     }
     else
     {
-      wait(&pid);
+      wait(&status);
+      *color_ind = WEXITSTATUS(status);
     }
   }
 
