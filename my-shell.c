@@ -18,27 +18,6 @@
 
 Alias *aliases = NULL;
 
-char **parse_command(char *instruction)
-{
-  char **command = malloc(sizeof(char *) * 10);
-  int c_count = 0;
-
-  int ins_len = strlen(instruction);
-
-  int start = 0;
-  for (int i = 0; i <= ins_len; i++)
-  {
-    if (instruction[i] == 32 || instruction[i] == 0)
-    {
-      command[c_count++] = copy_string(instruction, start, i);
-      start = i + 1;
-    }
-  }
-  command[c_count] = NULL;
-
-  return command;
-}
-
 void handle_cmd_not_found(char *command)
 {
   printf(ANSI_COLOR_YELLOW "ash: " ANSI_COLOR_RESET);
@@ -121,7 +100,7 @@ int main(void)
 
     gets(instruction);
 
-    char **command = parse_command(instruction);
+    char **command = splitIntoTen(instruction, ' ');
 
     if (handle_built_in(command, color_ind))
     {

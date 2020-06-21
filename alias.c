@@ -5,37 +5,18 @@
 #include "alias.h"
 #include "util.h"
 
-char **parse_alias(char *exp)
-{
-  char **alias = malloc(sizeof(char *) * 2);
-
-  int ins_len = strlen(exp);
-
-  for (int i = 0; i < ins_len; i++)
-  {
-    if (exp[i] == 61)
-    {
-      alias[0] = copy_string(exp, 0, i);
-      alias[1] = copy_string(exp, i + 1, ins_len);
-      break;
-    }
-  }
-
-  return alias;
-}
-
 void add_alias(Alias **aliases, char *exp)
 {
-  char **alias = parse_alias(exp);
+  char **aka_actual = splitIntoTwo(exp, '=');
 
   Alias *p_walk = *aliases;
   Alias *last = NULL;
 
   while (p_walk)
   {
-    if (strcmp(p_walk->aka, alias[0]) == 0)
+    if (strcmp(p_walk->aka, aka_actual[0]) == 0)
     {
-      strcpy(p_walk->actual, alias[1]);
+      strcpy(p_walk->actual, aka_actual[1]);
       return;
     }
     last = p_walk;
@@ -53,11 +34,11 @@ void add_alias(Alias **aliases, char *exp)
     *aliases = last;
   }
 
-  last->aka = malloc(sizeof(strlen(alias[0])));
-  last->actual = malloc(sizeof(strlen(alias[1])));
+  last->aka = malloc(sizeof(strlen(aka_actual[0])));
+  last->actual = malloc(sizeof(strlen(aka_actual[1])));
 
-  strcpy(last->aka, alias[0]);
-  strcpy(last->actual, alias[1]);
+  strcpy(last->aka, aka_actual[0]);
+  strcpy(last->actual, aka_actual[1]);
 }
 
 char *get_actual(Alias *aliases, char *aka)
