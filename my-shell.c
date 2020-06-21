@@ -26,11 +26,6 @@ void handle_cmd_not_found(char *command)
   exit(127);
 }
 
-void handle_ctrl_c(int signal)
-{
-  exit(130);
-}
-
 void prompt(int exit_code)
 {
   char cwd[PATH_MAX];
@@ -61,7 +56,6 @@ int main(void)
     char instruction[255];
 
     prompt(exit_code);
-
     gets(instruction);
 
     char **command = splitIntoTen(instruction, ' ');
@@ -73,17 +67,12 @@ int main(void)
 
     char *aka = command[0];
     char *actual = get_actual(aliases, aka);
-    while (strcmp(aka, actual) != 0)
-    {
-      strcpy(aka, actual);
-      actual = get_actual(aliases, actual);
-    }
 
     int pid = fork();
 
     if (pid == 0)
     {
-      signal(SIGINT, handle_ctrl_c);
+      signal(SIGINT, NULL);
       execvp(actual, command);
       handle_cmd_not_found(actual);
     }

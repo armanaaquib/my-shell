@@ -49,7 +49,7 @@ char *get_actual(Alias *aliases, char *aka)
   {
     if (strcmp(p_walk->aka, aka) == 0)
     {
-      return p_walk->actual;
+      return get_actual(aliases, p_walk->actual);
     }
     p_walk = p_walk->next;
   }
