@@ -52,3 +52,16 @@ char **splitIntoTen(char *instruction, char key)
 
   return split;
 }
+
+int find_char(char *string, char c)
+{
+  for (int i = 0; i < strlen(string); i++)
+  {
+    if (string[i] == c)
+    {
+      return 1;
+    }
+  }
+
+  return 0;
+}

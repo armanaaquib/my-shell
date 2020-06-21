@@ -10,6 +10,7 @@
 #include "alias.h"
 #include "util.h"
 #include "built_in.h"
+#include "var.h"
 
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN "\x1b[32m"
@@ -18,6 +19,7 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 Alias *aliases = NULL;
+Var *vars = NULL;
 
 void handle_cmd_not_found(char *command)
 {
@@ -60,7 +62,7 @@ int main(void)
 
     char **command = splitIntoTen(instruction, ' ');
 
-    if (handle_built_in(command, &aliases, &exit_code))
+    if (handle_built_in(command, &aliases, &vars, &exit_code))
     {
       continue;
     }
