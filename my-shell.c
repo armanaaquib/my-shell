@@ -65,8 +65,7 @@ int main(void)
       continue;
     }
 
-    char *aka = command[0];
-    char *actual = get_actual(aliases, aka);
+    char *actual = get_actual(aliases, command[0]);
 
     int pid = fork();
 

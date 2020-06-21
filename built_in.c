@@ -5,6 +5,7 @@
 #include <pwd.h>
 
 #include "built_in.h"
+#include "alias.h"
 
 int handle_alias(Alias **aliases, char **command, int *exit_code)
 {
@@ -42,22 +43,24 @@ int handle_cd(char *path, int *exit_code)
 
 int handle_built_in(char **command, Alias **aliases, int *exit_code)
 {
-  if (strcmp(command[0], "") == 0)
+  char *actual = get_actual(*aliases, command[0]);
+
+  if (strcmp(actual, "") == 0)
   {
     return 1;
   }
 
-  if (strcmp(command[0], "exit") == 0)
+  if (strcmp(actual, "exit") == 0)
   {
     exit(0);
   }
 
-  if (strcmp(command[0], "alias") == 0)
+  if (strcmp(actual, "alias") == 0)
   {
     return handle_alias(aliases, command, exit_code);
   }
 
-  if (strcmp(command[0], "cd") == 0)
+  if (strcmp(actual, "cd") == 0)
   {
     return handle_cd(command[1], exit_code);
   }
