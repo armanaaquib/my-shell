@@ -1,19 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "alias.h"
-
-char *copy_s(char *str, int start, int end)
-{
-  char *n_str = malloc(sizeof(char) * (end - start));
-
-  for (int i = start; i < end; i++)
-  {
-    n_str[i - start] = str[i];
-  }
-
-  return n_str;
-}
+#include "util.h"
 
 char **parse_alias(char *exp)
 {
@@ -25,8 +15,8 @@ char **parse_alias(char *exp)
   {
     if (exp[i] == 61)
     {
-      alias[0] = copy_s(exp, 0, i);
-      alias[1] = copy_s(exp, i + 1, ins_len);
+      alias[0] = copy_string(exp, 0, i);
+      alias[1] = copy_string(exp, i + 1, ins_len);
       break;
     }
   }

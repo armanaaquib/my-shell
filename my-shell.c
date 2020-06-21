@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
 #include <limits.h>
+
 #include "alias.h"
+#include "util.h"
 
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN "\x1b[32m"
@@ -14,18 +17,6 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 Alias *aliases = NULL;
-
-char *copy_string(char *str, int start, int end)
-{
-  char *n_str = malloc(sizeof(char) * (end - start));
-
-  for (int i = start; i < end; i++)
-  {
-    n_str[i - start] = str[i];
-  }
-
-  return n_str;
-}
 
 char **parse_command(char *instruction)
 {
