@@ -9,6 +9,7 @@
 
 #include "alias.h"
 #include "util.h"
+#include "built_in.h"
 
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN "\x1b[32m"
@@ -30,50 +31,14 @@ void handle_ctrl_c(int signal)
   exit(130);
 }
 
-int handle_built_in(char **command, int *color_ind)
-{
-  if (strcmp(command[0], "") == 0)
-  {
-    *color_ind = 1;
-    return 1;
-  }
-
-  if (strcmp(command[0], "exit") == 0)
-  {
-    exit(0);
-  }
-
-  if (strcmp(command[0], "alias") == 0)
-  {
-    if (command[1])
-    {
-      add_alias(&aliases, command[1]);
-    }
-    else
-    {
-      show(aliases);
-    }
-
-    return 1;
-  }
-
-  if (strcmp(command[0], "cd") == 0)
-  {
-    chdir(command[1]);
-    return 1;
-  }
-
-  return 0;
-}
-
-void prompt(int *color_ind)
+void prompt(int exit_code)
 {
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
 
   printf(ANSI_COLOR_CYAN "%s ", cwd);
 
-  if (*color_ind)
+  if (exit_code)
   {
     printf(ANSI_COLOR_RED "$ ");
   }
@@ -89,20 +54,19 @@ int main(void)
 {
   signal(SIGINT, SIG_IGN);
 
-  int *color_ind = malloc(sizeof(int));
-  *color_ind = 0;
+  int exit_code = 0;
 
   while (1)
   {
     char instruction[255];
 
-    prompt(color_ind);
+    prompt(exit_code);
 
     gets(instruction);
 
     char **command = splitIntoTen(instruction, ' ');
 
-    if (handle_built_in(command, color_ind))
+    if (handle_built_in(command, &aliases, &exit_code))
     {
       continue;
     }
@@ -116,7 +80,6 @@ int main(void)
     }
 
     int pid = fork();
-    int status;
 
     if (pid == 0)
     {
@@ -126,8 +89,9 @@ int main(void)
     }
     else
     {
+      int status;
       wait(&status);
-      *color_ind = WEXITSTATUS(status);
+      exit_code = WEXITSTATUS(status);
     }
   }
 
