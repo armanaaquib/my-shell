@@ -54,6 +54,34 @@ void prompt(int exit_code)
   printf(ANSI_COLOR_RESET);
 }
 
+void execute(char *instruction, int *exit_code)
+{
+  char **command = splitIntoTen(instruction, ' ');
+  expand(command, vars);
+
+  if (handle_built_in(command, &aliases, &vars, exit_code))
+  {
+    return;
+  }
+
+  char *actual = get_actual(aliases, command[0]);
+
+  int pid = fork();
+
+  if (pid == 0)
+  {
+    signal(SIGINT, NULL);
+    execvp(actual, command);
+    handle_cmd_not_found(actual);
+  }
+  else
+  {
+    int status;
+    wait(&status);
+    *exit_code = WEXITSTATUS(status);
+  }
+}
+
 int main(void)
 {
   signal(SIGINT, SIG_IGN);
@@ -68,30 +96,7 @@ int main(void)
     prompt(exit_code);
     gets(instruction);
 
-    char **command = splitIntoTen(instruction, ' ');
-    expand(command, vars);
-
-    if (handle_built_in(command, &aliases, &vars, &exit_code))
-    {
-      continue;
-    }
-
-    char *actual = get_actual(aliases, command[0]);
-
-    int pid = fork();
-
-    if (pid == 0)
-    {
-      signal(SIGINT, NULL);
-      execvp(actual, command);
-      handle_cmd_not_found(actual);
-    }
-    else
-    {
-      int status;
-      wait(&status);
-      exit_code = WEXITSTATUS(status);
-    }
+    execute(instruction, &exit_code);
   }
 
   return 0;
