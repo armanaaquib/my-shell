@@ -82,12 +82,28 @@ void execute(char *instruction, int *exit_code)
   }
 }
 
+void run_ashrc(int *exit_code)
+{
+  int buffer_len = 255;
+  char buffer[buffer_len];
+  FILE *fp = fopen(".ashrc", "r");
+
+  while (fgets(buffer, buffer_len, fp))
+  {
+    char *b = copy_string(buffer, 0, strlen(buffer) - 1);
+    execute(b, exit_code);
+  }
+
+  fclose(fp);
+}
+
 int main(void)
 {
   signal(SIGINT, SIG_IGN);
 
   add_defaults(&aliases, &vars);
   int exit_code = 0;
+  run_ashrc(&exit_code);
 
   while (1)
   {
