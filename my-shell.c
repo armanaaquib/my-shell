@@ -5,18 +5,12 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include <limits.h>
 
 #include "alias.h"
 #include "util.h"
 #include "built_in.h"
 #include "var.h"
-
-#define ANSI_COLOR_RED "\x1b[31m"
-#define ANSI_COLOR_GREEN "\x1b[32m"
-#define ANSI_COLOR_CYAN "\x1b[36m"
-#define ANSI_COLOR_YELLOW "\x1b[33m"
-#define ANSI_COLOR_RESET "\x1b[0m"
+#include "prompt.h"
 
 Alias *aliases = NULL;
 Var *vars = NULL;
@@ -33,25 +27,6 @@ void handle_cmd_not_found(char *command)
   printf(ANSI_COLOR_YELLOW "ash: " ANSI_COLOR_RESET);
   printf("command not found: %s\n", command);
   exit(127);
-}
-
-void prompt(int exit_code)
-{
-  char cwd[PATH_MAX];
-  getcwd(cwd, sizeof(cwd));
-
-  printf(ANSI_COLOR_CYAN "%s ", cwd);
-
-  if (exit_code)
-  {
-    printf(ANSI_COLOR_RED "$ ");
-  }
-  else
-  {
-    printf(ANSI_COLOR_GREEN "$ ");
-  }
-
-  printf(ANSI_COLOR_RESET);
 }
 
 void execute(char *instruction, int *exit_code)
