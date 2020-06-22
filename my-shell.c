@@ -68,13 +68,16 @@ void run_ashrc(int *exit_code)
 
   FILE *fp = fopen("/Users/aaquibequbal/.ashrc", "r");
 
-  while (fgets(buffer, buffer_len, fp))
+  if (fp)
   {
-    char *b = copy_string(buffer, 0, strlen(buffer) - 1);
-    execute(b, exit_code);
-  }
+    while (fgets(buffer, buffer_len, fp))
+    {
+      char *b = copy_string(buffer, 0, strlen(buffer) - 1);
+      execute(b, exit_code);
+    }
 
-  fclose(fp);
+    fclose(fp);
+  }
 }
 
 int main(void)
