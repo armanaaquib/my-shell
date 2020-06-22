@@ -18,9 +18,10 @@ void add_alias(Alias **aliases, char *exp, Var *vars)
   {
     if (strcmp(p_walk->aka, aka_actual[0]) == 0)
     {
-      strcpy(p_walk->actual, aka_actual[1]);
+      p_walk->actual = copy_string(aka_actual[1], 0, strlen(aka_actual[1]));
       return;
     }
+
     last = p_walk;
     p_walk = p_walk->next;
   }
@@ -39,8 +40,8 @@ void add_alias(Alias **aliases, char *exp, Var *vars)
   last->aka = malloc(sizeof(strlen(aka_actual[0])));
   last->actual = malloc(sizeof(strlen(aka_actual[1])));
 
-  strcpy(last->aka, aka_actual[0]);
-  strcpy(last->actual, aka_actual[1]);
+  last->aka = copy_string(aka_actual[0], 0, strlen(aka_actual[0]));
+  last->actual = copy_string(aka_actual[1], 0, strlen(aka_actual[1]));
 }
 
 char *get_actual(Alias *aliases, char *aka)

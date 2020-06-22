@@ -15,9 +15,10 @@ void add_var(Var **vars, char *exp)
   {
     if (strcmp(p_walk->name, name_value[0]) == 0)
     {
-      strcpy(p_walk->value, name_value[1]);
+      p_walk->value = copy_string(name_value[1], 0, strlen(name_value[1]));
       return;
     }
+
     last = p_walk;
     p_walk = p_walk->next;
   }
@@ -36,8 +37,8 @@ void add_var(Var **vars, char *exp)
   last->name = malloc(sizeof(strlen(name_value[0])));
   last->value = malloc(sizeof(strlen(name_value[1])));
 
-  strcpy(last->name, name_value[0]);
-  strcpy(last->value, name_value[1]);
+  last->name = copy_string(name_value[0], 0, strlen(name_value[0]));
+  last->value = copy_string(name_value[1], 0, strlen(name_value[1]));
 }
 
 char *get_val(Var *vars, char *name)

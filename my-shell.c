@@ -21,6 +21,13 @@
 Alias *aliases = NULL;
 Var *vars = NULL;
 
+void add_defaults(Alias **aliases, Var **vars)
+{
+  add_var(vars, "ash_p=ash: [cyan]{path} [status]$ ");
+  add_alias(aliases, "md=mkdir", *vars);
+  add_alias(aliases, "rd=rmdir", *vars);
+}
+
 void handle_cmd_not_found(char *command)
 {
   printf(ANSI_COLOR_YELLOW "ash: " ANSI_COLOR_RESET);
@@ -51,6 +58,7 @@ int main(void)
 {
   signal(SIGINT, SIG_IGN);
 
+  add_defaults(&aliases, &vars);
   int exit_code = 0;
 
   while (1)
