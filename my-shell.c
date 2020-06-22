@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <pwd.h>
 
 #include "alias.h"
 #include "util.h"
@@ -17,7 +18,7 @@ Var *vars = NULL;
 
 void add_defaults(Alias **aliases, Var **vars)
 {
-  add_var(vars, "ash_p=ash: [cyan]{path} [status]$ ");
+  add_var(vars, "ash_p=ash: [cyan]{pwd} [status]: ");
   add_alias(aliases, "md=mkdir", *vars);
   add_alias(aliases, "rd=rmdir", *vars);
 }
@@ -61,7 +62,11 @@ void run_ashrc(int *exit_code)
 {
   int buffer_len = 255;
   char buffer[buffer_len];
-  FILE *fp = fopen(".ashrc", "r");
+
+  // char *home_path = getpwuid(getuid())->pw_dir;
+  // chdir(home_path);
+
+  FILE *fp = fopen("/Users/aaquibequbal/.ashrc", "r");
 
   while (fgets(buffer, buffer_len, fp))
   {
@@ -84,7 +89,7 @@ int main(void)
   {
     char instruction[255];
 
-    prompt(exit_code);
+    prompt(exit_code, vars);
     gets(instruction);
 
     execute(instruction, &exit_code);

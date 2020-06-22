@@ -1,4 +1,5 @@
 #include <limits.h>
+#include "var.h"
 
 #ifndef __PROMPT_H_
 #define __PROMPT_H_
@@ -9,6 +10,12 @@
 #define ANSI_COLOR_YELLOW "\x1b[33m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
-void prompt(int exit_code);
+typedef struct
+{
+  char *str;
+  char *color;
+} Str_color;
+
+void prompt(int exit_code, Var *vars);
 
 #endif
