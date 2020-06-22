@@ -1,3 +1,5 @@
+#include "var.h"
+
 #ifndef __ALIAS_H_
 #define __ALIAS_H_
 
@@ -8,7 +10,7 @@ typedef struct alias
   struct alias *next;
 } Alias;
 
-void add_alias(Alias **aliases, char *exp);
+void add_alias(Alias **aliases, char *exp, Var *vars);
 char *get_actual(Alias *aliases, char *aka);
 void show(Alias *aliases);
 

@@ -10,5 +10,6 @@ typedef struct var
 
 void add_var(Var **vars, char *exp);
 char *get_val(Var *vars, char *name);
+void expand(char **command, Var *vars);
 
 #endif

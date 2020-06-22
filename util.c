@@ -15,7 +15,7 @@ char *copy_string(char *str, int start, int end)
 
 char **splitIntoTwo(char *exp, char key)
 {
-  char **split = malloc(sizeof(char *) * 2);
+  char **split = malloc(sizeof(char *) * 3);
   int ins_len = strlen(exp);
 
   for (int i = 0; i < ins_len; i++)
@@ -24,7 +24,7 @@ char **splitIntoTwo(char *exp, char key)
     {
       split[0] = copy_string(exp, 0, i);
       split[1] = copy_string(exp, i + 1, ins_len);
-
+      split[2] = NULL;
       return split;
     }
   }
@@ -34,7 +34,7 @@ char **splitIntoTwo(char *exp, char key)
 
 char **splitIntoTen(char *instruction, char key)
 {
-  char **split = malloc(sizeof(char *) * 10);
+  char **split = malloc(sizeof(char *) * 11);
   int s_count = 0;
 
   int ins_len = strlen(instruction);

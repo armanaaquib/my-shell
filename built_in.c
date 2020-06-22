@@ -9,11 +9,11 @@
 #include "var.h"
 #include "util.h"
 
-int handle_alias(Alias **aliases, char **command, int *exit_code)
+int handle_alias(Alias **aliases, char **command, int *exit_code, Var *vars)
 {
   if (command[1])
   {
-    add_alias(aliases, command[1]);
+    add_alias(aliases, command[1], vars);
     *exit_code = command[2] ? 1 : 0;
   }
   else
@@ -45,11 +45,6 @@ int handle_cd(char *path, int *exit_code)
 
 int handle_built_in(char **command, Alias **aliases, Var **vars, int *exit_code)
 {
-  if (command[0][0] == '$')
-  {
-    command[0] = get_val(*vars, command[0]);
-  }
-
   char *actual = get_actual(*aliases, command[0]);
 
   if (strcmp(actual, "") == 0)
@@ -64,7 +59,7 @@ int handle_built_in(char **command, Alias **aliases, Var **vars, int *exit_code)
 
   if (strcmp(actual, "alias") == 0)
   {
-    return handle_alias(aliases, command, exit_code);
+    return handle_alias(aliases, command, exit_code, *vars);
   }
 
   if (strcmp(actual, "cd") == 0)

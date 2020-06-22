@@ -6,6 +6,7 @@
 void add_var(Var **vars, char *exp)
 {
   char **name_value = splitIntoTwo(exp, '=');
+  expand(name_value, *vars);
 
   Var *p_walk = *vars;
   Var *last = NULL;
@@ -53,5 +54,19 @@ char *get_val(Var *vars, char *name)
     p_walk = p_walk->next;
   }
 
-  return NULL;
+  return "";
+}
+
+void expand(char **command, Var *vars)
+{
+  int i = 0;
+  while (command[i])
+  {
+    if (command[i][0] == '$' && find_char(command[i], '=') == 0)
+    {
+      char *to_free = command[i];
+      command[i] = get_val(vars, command[i]);
+    }
+    i++;
+  }
 }

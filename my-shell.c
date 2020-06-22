@@ -61,6 +61,7 @@ int main(void)
     gets(instruction);
 
     char **command = splitIntoTen(instruction, ' ');
+    expand(command, vars);
 
     if (handle_built_in(command, &aliases, &vars, &exit_code))
     {

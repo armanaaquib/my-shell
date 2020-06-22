@@ -4,10 +4,12 @@
 
 #include "alias.h"
 #include "util.h"
+#include "var.h"
 
-void add_alias(Alias **aliases, char *exp)
+void add_alias(Alias **aliases, char *exp, Var *vars)
 {
   char **aka_actual = splitIntoTwo(exp, '=');
+  expand(aka_actual, vars);
 
   Alias *p_walk = *aliases;
   Alias *last = NULL;
