@@ -6,16 +6,23 @@
 #include "prompt.h"
 #include "util.h"
 
+char *get_to(char *string, char c, int *start)
+{
+  char *sub_str = malloc(sizeof(char) * 10);
+  int ss_c = 0;
+
+  while (string[*start] != c)
+  {
+    sub_str[ss_c++] = string[(*start)++];
+  }
+  sub_str[ss_c] = '\0';
+
+  return sub_str;
+}
+
 char *get_color(char *ash_p, int *start, int exit_code)
 {
-  char *color = malloc(sizeof(char) * 10);
-  int c_c = 0;
-
-  while (ash_p[*start] != ']')
-  {
-    color[c_c++] = ash_p[(*start)++];
-  }
-  color[c_c] = '\0';
+  char *color = get_to(ash_p, ']', start);
 
   if (strcmp(color, "red") == 0)
   {
@@ -48,14 +55,7 @@ char *get_color(char *ash_p, int *start, int exit_code)
 
 char *expand_to(char *ash_p, int *start)
 {
-  char *pd = malloc(sizeof(char) * 10);
-  int pd_c = 0;
-
-  while (ash_p[*start] != '}')
-  {
-    pd[pd_c++] = ash_p[(*start)++];
-  }
-  pd[pd_c] = '\0';
+  char *pd = get_to(ash_p, '}', start);
 
   if (strcmp(pd, "pwd") == 0)
   {
