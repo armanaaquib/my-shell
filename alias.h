@@ -12,6 +12,7 @@ typedef struct alias
 
 void add_alias(Alias **aliases, char *exp, Var *vars);
 char *get_actual(Alias *aliases, char *aka);
+char **replace_alias(Alias *aliasses, char **command);
 void show(Alias *aliases);
 
 #endif

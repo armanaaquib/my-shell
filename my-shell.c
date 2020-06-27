@@ -18,7 +18,9 @@ Var *vars = NULL;
 
 void add_defaults(Alias **aliases, Var **vars)
 {
-  add_var(vars, "ash_p=ash: [cyan]{pwd} [status]: ");
+  add_var(vars, "ash_p=ash: [cyan]{pwd} [status]$ ");
+  add_alias(aliases, "ll=ls -l", *vars);
+  add_alias(aliases, "lg=ls -l -G", *vars);
   add_alias(aliases, "md=mkdir", *vars);
   add_alias(aliases, "rd=rmdir", *vars);
 }
@@ -40,7 +42,8 @@ void execute(char *instruction, int *exit_code)
     return;
   }
 
-  char *actual = get_actual(aliases, command[0]);
+  command = replace_alias(aliases, command);
+  char *actual = command[0];
 
   int pid = fork();
 
@@ -86,7 +89,7 @@ int main(void)
 
   add_defaults(&aliases, &vars);
   int exit_code = 0;
-  run_ashrc(&exit_code);
+  // run_ashrc(&exit_code);
 
   while (1)
   {

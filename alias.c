@@ -60,6 +60,30 @@ char *get_actual(Alias *aliases, char *aka)
   return aka;
 }
 
+char **replace_alias(Alias *aliasses, char **command)
+{
+  char *actual = get_actual(aliasses, command[0]);
+
+  char **split_actual = splitIntoTen(actual, ' ');
+
+  char **new_cmd = malloc(sizeof(char *) * 20);
+  int nc_c = 0;
+
+  while (split_actual[nc_c])
+  {
+    new_cmd[nc_c] = split_actual[nc_c];
+    nc_c += 1;
+  }
+
+  int i = 0;
+  do
+  {
+    new_cmd[nc_c++] = command[++i];
+  } while (command[i]);
+
+  return new_cmd;
+}
+
 void show(Alias *aliases)
 {
   Alias *p_walk = aliases;
