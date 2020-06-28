@@ -61,6 +61,18 @@ void execute(char *instruction, int *exit_code)
   }
 }
 
+void run(char *ins, int *exit_code)
+{
+  char **instruction = splitIntoTen(ins, ';');
+
+  int i = 0;
+  while (instruction[i])
+  {
+    execute(instruction[i], exit_code);
+    i += 1;
+  }
+}
+
 void run_ashrc(int *exit_code)
 {
   int buffer_len = 255;
@@ -76,7 +88,7 @@ void run_ashrc(int *exit_code)
     while (fgets(buffer, buffer_len, fp))
     {
       char *b = copy_string(buffer, 0, strlen(buffer) - 1);
-      execute(b, exit_code);
+      run(b, exit_code);
     }
 
     fclose(fp);
@@ -89,7 +101,7 @@ int main(void)
 
   add_defaults(&aliases, &vars);
   int exit_code = 0;
-  // run_ashrc(&exit_code);
+  run_ashrc(&exit_code);
 
   while (1)
   {
@@ -98,7 +110,7 @@ int main(void)
     prompt(exit_code, vars);
     gets(instruction);
 
-    execute(instruction, &exit_code);
+    run(instruction, &exit_code);
   }
 
   return 0;
